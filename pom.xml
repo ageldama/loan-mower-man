@@ -93,6 +93,14 @@
             <version>2.9.2</version>
         </dependency>
 
+        <!-- REST/HTTP Testing -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.9</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

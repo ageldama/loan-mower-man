@@ -2,7 +2,12 @@
 
     // TODO: DELETE -- Purge
 
-    // TODO: GET 은행목록
+    // TODO: GET 은행목록 (+native-query?)
+
+    // TODO: JWT
+
+
+
 
     // TODO: GET 연도별 각 금융기관의 지원금액 합계
 
@@ -10,6 +15,6 @@
 
     // TODO: GET 외환은행의 지급액 평균(연도별) 최소/최대값?
 
-    // TODO: 특정 은행의 특정 달에 대해서 2018 년도 해당 달에 금융지원 금액을 예측하는 API
 
-    // TODO: JWT
+
+    // TODO: 특정 은행의 특정 달에 대해서 2018 년도 해당 달에 금융지원 금액을 예측하는 API
