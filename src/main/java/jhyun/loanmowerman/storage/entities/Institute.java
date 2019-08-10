@@ -25,7 +25,6 @@ public class Institute implements Serializable {
 
     @Getter
     @Setter
-    @Id
     @Column(name = "institute_name")
     private String name;
 
