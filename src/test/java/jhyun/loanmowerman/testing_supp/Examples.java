@@ -26,6 +26,10 @@ public final class Examples {
         return Resources.getResource("example01-utf8-3lines.csv");
     }
 
+    public static URL exampleCsvMini() {
+        return Resources.getResource("example01-utf8-mini.csv");
+    }
+
     public static String urlAsString(final URL url) throws IOException {
         return IOUtils.toString(url, Charsets.UTF_8);
     }
