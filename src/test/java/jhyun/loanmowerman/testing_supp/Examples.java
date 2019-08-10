@@ -7,6 +7,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,9 +22,12 @@ public final class Examples {
         return Resources.getResource("example01-utf8.csv");
     }
 
-    public static String exampleCsvAsString() throws IOException {
-        final URL url = exampleCsv();
+    public static String urlAsString(final URL url) throws IOException {
         return IOUtils.toString(url, Charsets.UTF_8);
+    }
+
+    public static InputStream urlAsInputStream(final URL url) throws IOException {
+        return url.openStream();
     }
 
     @Test
@@ -34,8 +38,17 @@ public final class Examples {
 
     @Test
     public void testExampleCsvAsString() throws IOException {
-        final String content = exampleCsvAsString();
+        final String content = urlAsString(exampleCsv());
         assertThat(content).isNotEmpty();
+        log.trace(content);
+    }
+
+    @Test
+    public void testExampleCsvAsInputStream() throws IOException {
+        final InputStream inputStream = urlAsInputStream(exampleCsv());
+        assertThat(inputStream).isNotNull();
+        final String content = IOUtils.toString(inputStream, Charsets.UTF_8);
+        assertThat(content).isNotBlank();
         log.trace(content);
     }
 }
