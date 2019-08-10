@@ -15,10 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class LoanAmountHistoryService {
@@ -56,7 +53,7 @@ public class LoanAmountHistoryService {
                     // not-found: create-new
                     final Institute institute_ = new Institute(instituteCode, idxAndName.getName());
                     this.instituteRepository.save(institute_);
-                    institute = Optional.of(institute_);
+                    institute = this.instituteRepository.findById(instituteCode);
                 }
                 // create(loan-amount)
                 final Integer amount = amountsPerInstitute.get(idxAndName);
@@ -70,6 +67,10 @@ public class LoanAmountHistoryService {
     public void purgeAll() {
         loanAmountRepository.deleteAll();
         instituteRepository.deleteAll();
+    }
+
+    public Collection<String> listAllInstituteNames() {
+        return instituteRepository.listAllInstituteNames();
     }
 
 }

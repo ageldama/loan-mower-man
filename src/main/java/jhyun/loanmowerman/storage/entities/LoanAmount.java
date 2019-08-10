@@ -19,7 +19,7 @@ public class LoanAmount implements Serializable {
     @Getter
     @Setter
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "loan_amounts_id_seq")
     @Column(name = "id")
     private Integer id;
 

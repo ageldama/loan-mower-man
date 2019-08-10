@@ -49,4 +49,10 @@ public class LoanAmountHistoryServiceTest {
                 2005, 1, 123
         )));
     }
+
+    @Test
+    public void testListAllInstituteNames() {
+        this.loanAmountHistoryService.listAllInstituteNames();
+        verify(this.instituteRepository, times(1)).listAllInstituteNames();
+    }
 }

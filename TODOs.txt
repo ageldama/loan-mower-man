@@ -1,8 +1,9 @@
-    // TODO: PUT CSV --> Institute, LoanAmount
+DONE: PUT CSV --> Institute, LoanAmount
 
-    // TODO: DELETE -- Purge
+DONE: DELETE -- Purge
 
-    // TODO: GET 은행목록 (+native-query?)
+DONE: GET 은행목록 (+native-query?)
+
 
     // TODO: JWT
 
