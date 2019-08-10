@@ -1,4 +1,4 @@
-package jhyun.loanmowerman.names;
+package jhyun.loanmowerman.value_sanitizers;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +24,7 @@ public class BankNameSanitizerTest {
                 {"농협은행/수협은행(억원)", "농협은행/수협은행"},
                 {"외환은행(억원)", "외환은행"},
                 {"기타은행(억원)", "기타은행"},
+                {"DB", "DB"},
                 {"", ""},
                 {null, null}
         });

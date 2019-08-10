@@ -1,4 +1,4 @@
-package jhyun.loanmowerman.names;
+package jhyun.loanmowerman.value_sanitizers;
 
 public class BankNameSanitizer {
 
