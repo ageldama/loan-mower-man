@@ -19,3 +19,8 @@ DONE: GET 은행목록 (+native-query?)
 
 
     // TODO: 특정 은행의 특정 달에 대해서 2018 년도 해당 달에 금융지원 금액을 예측하는 API
+
+
+// TODO: Swagger 점검/보강
+
+// TODO: README!
