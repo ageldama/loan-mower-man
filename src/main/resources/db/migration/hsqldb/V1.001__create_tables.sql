@@ -1,0 +1,6 @@
+CREATE SCHEMA IF NOT EXISTS loanmowerman;
+
+CREATE TABLE IF NOT EXISTS loanmowerman.institutes (
+    code LONGVARCHAR PRIMARY KEY,
+    name LONGVARCHAR NOT NULL
+);

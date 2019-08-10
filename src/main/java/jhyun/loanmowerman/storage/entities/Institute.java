@@ -9,12 +9,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @ToString
 @EqualsAndHashCode
 @Entity
 @Table(name = "institutes")
-public class Institute {
+public class Institute implements Serializable {
 
     @Getter
     @Setter
