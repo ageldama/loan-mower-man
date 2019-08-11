@@ -2,9 +2,7 @@ package jhyun.loanmowerman.services.predictions;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 @ApiModel("지원 금액 예측결과")
 @EqualsAndHashCode
@@ -12,13 +10,22 @@ import lombok.ToString;
 @Builder
 public class LoanAmountPrediction {
 
-    @ApiModelProperty(value = "은행코드")
+    @Getter
+    @Setter
+    @ApiModelProperty(required = true, value = "은행코드")
     private String bank;
 
+    @Getter
+    @Setter
     private Integer year;
 
+    @Getter
+    @Setter
     private Integer month;
 
+    @ApiModelProperty(required = true, value="금액(억KRW)")
+    @Getter
+    @Setter
     private Long amount;
 
     public LoanAmountPrediction() {
