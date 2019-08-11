@@ -49,7 +49,7 @@ DONE: Swagger 점검/보강
 DONE: README!
 
 
-// TODO: 특정 은행의 특정 달에 대해서 2018 년도 해당 달에 금융지원 금액을 예측하는 API (pred-api)
+DONE: 특정 은행의 특정 달에 대해서 2018 년도 해당 달에 금융지원 금액을 예측하는 API (pred-api)
 
   - 특정 은행의 특정 달에 대해서 2018 년도 해당 달에 금융지원 금액을 예측하는 API 개발
     o 단, 예측 알고리즘을 무엇을 써야하는지에 대한 제약은 없지만, 가장 근사치에 가까울 수록 높은 점수 부여.
@@ -69,11 +69,19 @@ DONE: README!
     }
 
 
-// TODO: Swagger + pred-api
+DONE: Swagger + pred-api
 
 
 // TODO: README 보강
   1. <개발 프레임워크, 문제해결 전략, 빌드 및 실행 방법> 정리
   1. 구현한 기능들과 구현한 형태와 특징 설명
+
+
+// TODO: predictor -- regression?
+    - webmvc, swagger
+    - testcases
+
+
+// TODO: 새로 git clone해서 `./mvnw package` 해봐 -- check
 
 
