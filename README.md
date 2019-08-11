@@ -69,6 +69,14 @@
 * JPA Entity으로 기본 데이터 엔티티들 정의하고
 * Spring Data JPA으로 CRUD 메서드/쿼리 일일이 작성을 하지 않아도 되도록.
 
+### Weka
+* <https://www.cs.waikato.ac.nz/ml/weka/>
+* "지원가능금액"을 추정하는데 Linear Regression 사용하는데 필요해서.
+* 다른 ML/DNN 라이브러리/프레임웍이 많지만,
+  * DNN까진 필요하지 않은거 같고, 
+  * LR만으로 괜찮은거 같고,
+  * 또, 별도의 프로그래밍언어를 필요로 하는 ML프레임웍이 아니고 Java만으로, Monolithic한 애플리케이션에 포함시키기 좋아보여서 선택.
+
 ----
 
 ## 문제해결 전략
@@ -93,5 +101,9 @@
 
 ### "특정 은행의 특정 달에 대해서 2018 년도 해당 달에 금융지원 금액을 예측하는 API"
 1. `strategy` query parameter을 이용해서 다른 예측 알고리즘으로 쉽게 바꿔서 실행하도록 구조를 만들어놓았다.
-  1. 지정하지 않으면, 기본값은 "매년 같은 달(month)의 평균값"을 제시하는 `average`.
+  1. 지정하지 않으면, 기본값은 `linear_regression`
 1. 추가적인 알고리즘을 개발해도 쉽게 추가가 가능한 코드 구조를 만들어놓았다.
+1. 지원하는 알고리즘들은:
+  1. `linear_regression` : 해당 은행의 연도별, 월별 지원금액들로 학습한 [Linear Regression (Weka)](https://www.cs.waikato.ac.nz/ml/weka/)
+  1. `average` : 해당 은행의 매년 같은 달(month)의 평균값.
+  1. `average_all` : 해당 은행의 모든 지원금액의 평균값.
