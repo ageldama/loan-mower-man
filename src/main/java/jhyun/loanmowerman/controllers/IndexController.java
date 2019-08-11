@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringBufferInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -20,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Api
+@RequestMapping
 @RestController
 public class IndexController {
 

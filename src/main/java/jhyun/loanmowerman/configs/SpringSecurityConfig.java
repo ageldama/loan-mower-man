@@ -2,8 +2,10 @@ package jhyun.loanmowerman.configs;
 
 import jhyun.loanmowerman.security.JwtAuthFilter;
 import jhyun.loanmowerman.security.JwtAuthenticationEntryPoint;
+import jhyun.loanmowerman.security.JwtAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -16,6 +18,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthEndPoint;
+
+    @Autowired
+    private JwtAuthenticationProvider jwtAuthenticationProvider;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(jwtAuthenticationProvider);
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

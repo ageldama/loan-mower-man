@@ -1,5 +1,7 @@
 package jhyun.loanmowerman.controllers;
 
+import io.swagger.annotations.Api;
+import jhyun.loanmowerman.controllers.api_user.ApiUserDuplicatedException;
 import jhyun.loanmowerman.controllers.api_user.SignInForm;
 import jhyun.loanmowerman.controllers.api_user.SignUpForm;
 import jhyun.loanmowerman.services.ApiUserService;
@@ -21,6 +23,7 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 // TODO: swagger
+@Api
 @RequestMapping(path = "/api-user")
 @RestController
 public class ApiUserController {
@@ -43,10 +46,10 @@ public class ApiUserController {
             produces = TEXT_PLAIN_VALUE)
     public ResponseEntity<String> signUp(
             @RequestBody SignUpForm signUpForm
-    ) throws IOException, URISyntaxException {
+    ) throws IOException, URISyntaxException, ApiUserDuplicatedException {
         final Optional<ApiUser> apiUser = apiUserService.signUp(signUpForm.getId(), signUpForm.getPassword());
         if (!apiUser.isPresent()) {
-            // TODO
+            throw new ApiUserDuplicatedException(signUpForm.getId());
         }
         val token = jwtService.generateToken(apiUser.get());
         return ResponseEntity.status(HttpStatus.CREATED)
