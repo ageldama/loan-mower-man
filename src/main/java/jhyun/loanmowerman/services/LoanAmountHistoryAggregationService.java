@@ -44,7 +44,7 @@ public class LoanAmountHistoryAggregationService {
         for (Institute institute : institutes) {
             Long sum = loanAmountRepository.sumAmountOfYearByInstitute(institute.getCode(), year);
             log.trace("year({}) institute({}) -- {}", year, institute.getCode(), sum);
-            if (mostAmount < sum) {
+            if (sum != null && mostAmount < sum) {
                 mostInstitute = institute;
                 mostAmount = sum;
             }

@@ -34,7 +34,9 @@ public class LoanAmountHistoryAggregationServiceTest {
         loanAmountHistoryService.saveCsv(inputStream);
         //
         final Map<String, Object> result = loanAmountHistoryAggregationService.totalLoanAmountsByYear();
-        // TODO 값 검증
+        //
+        assertThat(result).containsKey("entries").containsKey("name");
+        assertThat(result.get("name")).isEqualTo("주택금융 공급현황");
     }
 
     @Test
