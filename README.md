@@ -101,9 +101,9 @@
 
 ### "특정 은행의 특정 달에 대해서 2018 년도 해당 달에 금융지원 금액을 예측하는 API"
 1. `strategy` query parameter을 이용해서 다른 예측 알고리즘으로 쉽게 바꿔서 실행하도록 구조를 만들어놓았다.
-  1. 지정하지 않으면, 기본값은 `linear_regression`
+   1. 지정하지 않으면, 기본값은 `linear_regression`
 1. 추가적인 알고리즘을 개발해도 쉽게 추가가 가능한 코드 구조를 만들어놓았다.
 1. 지원하는 알고리즘들은:
-  1. `linear_regression` : 해당 은행의 연도별, 월별 지원금액들로 학습한 [Linear Regression (Weka)](https://www.cs.waikato.ac.nz/ml/weka/)
-  1. `average` : 해당 은행의 매년 같은 달(month)의 평균값.
-  1. `average_all` : 해당 은행의 모든 지원금액의 평균값.
+   1. `linear_regression` : 해당 은행의 연도별, 월별 지원금액들로 학습한 [Linear Regression (Weka)](https://www.cs.waikato.ac.nz/ml/weka/)
+   1. `average` : 해당 은행의 매년 같은 달(month)의 평균값.
+   1. `average_all` : 해당 은행의 모든 지원금액의 평균값.
