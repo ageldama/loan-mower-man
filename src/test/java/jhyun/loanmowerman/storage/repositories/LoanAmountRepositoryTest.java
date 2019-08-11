@@ -1,6 +1,5 @@
 package jhyun.loanmowerman.storage.repositories;
 
-import com.google.common.collect.Lists;
 import jhyun.loanmowerman.services.LoanAmountHistoryService;
 import jhyun.loanmowerman.storage.entities.Institute;
 import jhyun.loanmowerman.storage.entities.LoanAmount;
@@ -13,10 +12,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -42,15 +44,17 @@ public class LoanAmountRepositoryTest {
         loanAmountHistoryService.purgeAll();
     }
 
+    @Transactional(readOnly = true)
     @Test
     public void testFindByInstituteOrderByYearAsc() {
-        final ArrayList<LoanAmount> result = Lists.newArrayList(
-                loanAmountRepository.findByInstituteOrderByYearAsc("2"));
-        final Institute institute = new Institute("2", "주택도시기금");
-        assertThat(result).isNotNull()
-                // NOTE: not really correct assertion:
-                .containsExactly(new LoanAmount(institute, 2005, 1, 1019),
-                        new LoanAmount(institute, 2005, 2, 1144),
-                        new LoanAmount(institute, 2005, 3, 1144));
+        try (Stream<LoanAmount> stream = loanAmountRepository.findByInstituteOrderByYearAsc("2")) {
+            final List<LoanAmount> result = stream.collect(Collectors.toList());
+            final Institute institute = new Institute("2", "주택도시기금");
+            assertThat(result).isNotNull()
+                    // NOTE: not really correct assertion:
+                    .containsExactly(new LoanAmount(institute, 2005, 1, 1019),
+                            new LoanAmount(institute, 2005, 2, 1144),
+                            new LoanAmount(institute, 2005, 3, 1144));
+        }
     }
 }

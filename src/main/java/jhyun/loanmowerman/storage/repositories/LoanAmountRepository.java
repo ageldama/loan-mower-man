@@ -1,13 +1,11 @@
 package jhyun.loanmowerman.storage.repositories;
 
-import jhyun.loanmowerman.storage.entities.Institute;
 import jhyun.loanmowerman.storage.entities.LoanAmount;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.stream.Stream;
 
 public interface LoanAmountRepository extends PagingAndSortingRepository<LoanAmount, Integer> {
 
@@ -24,5 +22,5 @@ public interface LoanAmountRepository extends PagingAndSortingRepository<LoanAmo
     Long averageAmountByInstitute(String instituteCode);
 
     @Query("SELECT l FROM LoanAmount l WHERE l.institute.code = ?1 ORDER BY l.year ASC")
-    Iterable<LoanAmount> findByInstituteOrderByYearAsc(String instituteCode);
+    Stream<LoanAmount> findByInstituteOrderByYearAsc(String instituteCode);
 }
