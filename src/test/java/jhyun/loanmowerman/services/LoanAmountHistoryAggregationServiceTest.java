@@ -1,6 +1,7 @@
 package jhyun.loanmowerman.services;
 
 import jhyun.loanmowerman.services.loan_amount_history_aggregations.MinMaxOfInstitute;
+import jhyun.loanmowerman.services.loan_amount_history_aggregations.TotalLoanAmounts;
 import jhyun.loanmowerman.services.loan_amount_history_aggregations.YearAndAmountEntry;
 import jhyun.loanmowerman.storage.entities.Institute;
 import jhyun.loanmowerman.testing_supp.Examples;
@@ -33,10 +34,9 @@ public class LoanAmountHistoryAggregationServiceTest {
         final InputStream inputStream = Examples.urlAsInputStream(Examples.exampleCsv());
         loanAmountHistoryService.saveCsv(inputStream);
         //
-        final Map<String, Object> result = loanAmountHistoryAggregationService.totalLoanAmountsByYear();
+        final TotalLoanAmounts result = loanAmountHistoryAggregationService.totalLoanAmountsByYear();
         //
-        assertThat(result).containsKey("entries").containsKey("name");
-        assertThat(result.get("name")).isEqualTo("주택금융 공급현황");
+        assertThat(result.getName()).isEqualTo("주택금융 공급현황");
     }
 
     @Test

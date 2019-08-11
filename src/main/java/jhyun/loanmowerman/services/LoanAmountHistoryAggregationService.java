@@ -1,11 +1,11 @@
 package jhyun.loanmowerman.services;
 
-import com.google.common.base.Verify;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import jhyun.loanmowerman.services.loan_amount_history_aggregations.MinMaxOfInstitute;
+import jhyun.loanmowerman.services.loan_amount_history_aggregations.TotalLoanAmountEntry;
+import jhyun.loanmowerman.services.loan_amount_history_aggregations.TotalLoanAmounts;
 import jhyun.loanmowerman.services.loan_amount_history_aggregations.YearAndAmountEntry;
 import jhyun.loanmowerman.storage.entities.Institute;
 import jhyun.loanmowerman.storage.repositories.InstituteRepository;
@@ -56,33 +56,32 @@ public class LoanAmountHistoryAggregationService {
 
     /**
      * 연도별 각 금융기관의 지원금액 합계
+     * @return
      */
-    public Map<String, Object> totalLoanAmountsByYear() {
-        final Map<String, Object> result = new HashMap<>();
-        result.put("name", "주택금융 공급현황");
-        final List<Map<String, Object>> entries = new ArrayList<>();
-        result.put("entries", entries);
-
+    public TotalLoanAmounts totalLoanAmountsByYear() {
+        final List<TotalLoanAmountEntry> entries = new ArrayList<>();
         final Collection<Integer> years = loanAmountRepository.listAllYears();
         final List<Institute> institutes = Lists.newArrayList(instituteRepository.findAll());
         for (Integer year : years) {
             Long total = 0L;
-            final Map<String, Object> detailAmounts = new HashMap<>();
+            final Map<String, Long> detailAmounts = new HashMap<>();
             for (Institute institute : institutes) {
                 Long sum = loanAmountRepository.sumAmountOfYearByInstitute(institute.getCode(), year);
                 log.trace("year({}) institute({}) -- {}", year, institute.getCode(), sum);
                 detailAmounts.put(institute.getName(), sum);
                 total += sum;
             }
-            entries.add(ImmutableMap.<String, Object>builder()
-                    .put("detail_amount", detailAmounts)
-                    .put("total_amount", total)
-                    .put("year", String.format("%s 년", year))
-                    .build()
-            );
+            entries.add(TotalLoanAmountEntry.builder()
+                    .amounts(detailAmounts)
+                    .total(total)
+                    .year(String.format("%s 년", year))
+            .build());
         }
 
-        return result;
+        return TotalLoanAmounts.builder()
+                .name("주택금융 공급현황")
+                .entries(entries)
+                .build();
     }
 
     /**

@@ -6,6 +6,7 @@ import jhyun.loanmowerman.controllers.aggregations.NoDataException;
 import jhyun.loanmowerman.services.LoanAmountHistoryAggregationService;
 import jhyun.loanmowerman.services.loan_amount_history_aggregations.MinMaxOfInstitute;
 import jhyun.loanmowerman.services.loan_amount_history_aggregations.MostLoanAllowedInstitute;
+import jhyun.loanmowerman.services.loan_amount_history_aggregations.TotalLoanAmounts;
 import jhyun.loanmowerman.storage.entities.Institute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
 import java.util.Optional;
 
 @Api(description = "입력된 은행목록, 금액지원 내역의 통계/합산")
@@ -48,7 +48,7 @@ public class LoanAmountHistoryAggregationController {
     @ApiOperation(value = "연도별 각 금융기관의 지원금액 합계")
     @RequestMapping(path = "/totalByYears", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Map<String, Object> totalLoanAmountsByYear() {
+    public TotalLoanAmounts totalLoanAmountsByYear() {
         return loanAmountHistoryAggregationService.totalLoanAmountsByYear();
     }
 
