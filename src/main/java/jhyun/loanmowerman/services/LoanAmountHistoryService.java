@@ -54,6 +54,12 @@ public class LoanAmountHistoryService {
                     final Institute institute_ = new Institute(instituteCode, idxAndName.getName());
                     this.instituteRepository.save(institute_);
                     institute = this.instituteRepository.findById(instituteCode);
+                    if (!institute.isPresent()) {
+                        // NOTE: last resort for testcases!
+                        // no need to worry, anyway it will fail on non-test running,
+                        // since this is a JPA transient(not persisted) object.
+                        institute = Optional.of(institute_);
+                    }
                 }
                 // create(loan-amount)
                 final Integer amount = amountsPerInstitute.get(idxAndName);

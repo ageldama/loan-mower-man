@@ -42,7 +42,7 @@ public class LoanAmountHistoryServiceTest {
         final InputStream inputStream = Examples.urlAsInputStream(Examples.exampleCsvMini());
         this.loanAmountHistoryService.saveCsv(inputStream);
         //
-        verify(this.instituteRepository, times(1)).findById(eq("3"));
+        verify(this.instituteRepository, times(2)).findById(eq("3"));
         verify(this.instituteRepository, times(1)).save(eq(new Institute("3", "국민은행")));
         verify(this.loanAmountRepository, times(1)).save(eq(new LoanAmount(
                 new Institute("3", "국민은행"),

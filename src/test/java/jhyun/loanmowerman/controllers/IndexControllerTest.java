@@ -1,18 +1,17 @@
 package jhyun.loanmowerman.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jhyun.loanmowerman.services.ApiUserService;
 import jhyun.loanmowerman.services.LoanAmountHistoryService;
 import jhyun.loanmowerman.storage.repositories.InstituteRepository;
 import jhyun.loanmowerman.storage.repositories.LoanAmountRepository;
 import jhyun.loanmowerman.testing_supp.Examples;
 import jhyun.loanmowerman.testing_supp.WebMvcTestBase;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import java.io.IOException;
 import java.net.URI;
@@ -33,11 +32,22 @@ public class IndexControllerTest extends WebMvcTestBase {
     @Autowired
     private LoanAmountHistoryService loanAmountHistoryService;
 
+    @Autowired
+    private ApiUserService apiUserService;
+
+    @Before
+    public void prepareApiUser() {
+        apiUserService.purgeAllApiUsers();
+        apiUserService.signUp(apiUserId, apiUserPw);
+    }
+
     @Test
     public void testPurgeAllOk() {
+        final HttpHeaders headers = apiUserJwtHeaders();
+        final HttpEntity request = new HttpEntity(headers);
         final ResponseEntity<String> response =
                 restTemplate.exchange(apiBase() + "/history", HttpMethod.DELETE,
-                        null, String.class);
+                        request, String.class);
         assertThat(response.getStatusCodeValue()).isEqualTo(205);
     }
 
@@ -45,10 +55,14 @@ public class IndexControllerTest extends WebMvcTestBase {
     public void testSaveCsvOk() throws URISyntaxException, IOException {
         assertThat(instituteRepository.count()).isZero();
         assertThat(loanAmountRepository.count()).isZero();
+        final HttpHeaders headers = apiUserJwtHeaders();
         //
-        final RequestEntity<String> request = RequestEntity.put(new URI(apiBase() + "/history"))
+        final RequestEntity<String> request = RequestEntity
+                .put(new URI(apiBase() + "/history"))
                 .contentType(MediaType.TEXT_PLAIN)
+                .header("Authorization", headers.getFirst("Authorization"))
                 .body(Examples.urlAsString(Examples.exampleCsv3Lines()));
+
         final ResponseEntity<String> response = restTemplate.exchange(apiBase() + "/history", HttpMethod.PUT,
                 request, String.class);
         assertThat(response.getStatusCodeValue()).isEqualTo(201);
@@ -72,10 +86,12 @@ public class IndexControllerTest extends WebMvcTestBase {
     public void testListAllInstituteNames() throws IOException {
         purgeAll();
         saveCsv(Examples.exampleCsv3Lines());
+        final HttpHeaders headers = apiUserJwtHeaders();
         //
+        final HttpEntity request = new HttpEntity(headers);
         final ResponseEntity<String> response =
                 restTemplate.exchange(apiBase() + "/institute-names", HttpMethod.GET,
-                        null, String.class);
+                        request, String.class);
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
         final ObjectMapper objectMapper = new ObjectMapper();
         final ArrayList names = objectMapper.readValue(response.getBody(), ArrayList.class);

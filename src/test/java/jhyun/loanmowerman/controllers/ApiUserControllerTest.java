@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.HashMap;
 
@@ -53,12 +54,14 @@ public class ApiUserControllerTest extends WebMvcTestBase {
         form.put("id", "foo");
         form.put("password", "bar");
         val request = new HttpEntity(form, headers);
-        final ResponseEntity<String> response =
-                restTemplate.exchange(apiBase() + "/api-user/signup", HttpMethod.POST,
-                        request, String.class);
-        assertThat(response.getHeaders()).containsKey("Token");
-        assertThat(response.getHeaders().getFirst("Token")).isNotBlank();
-        assertThat(response.getStatusCodeValue()).isEqualTo(400);
+        try {
+            final ResponseEntity<String> response =
+                    restTemplate.exchange(apiBase() + "/api-user/signup", HttpMethod.POST,
+                            request, String.class);
+            assertThat(false).isTrue(); // NO!
+        } catch (HttpClientErrorException exc) {
+            assertThat(exc.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Test

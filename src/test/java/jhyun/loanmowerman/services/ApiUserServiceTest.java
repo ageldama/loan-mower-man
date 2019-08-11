@@ -38,7 +38,7 @@ public class ApiUserServiceTest {
         final ApiUser expect = new ApiUser("foobar", ">>>spameggs<<<");
         verify(apiUserRepository, times(1))
                 .save(eq(expect));
-        assertThat(apiUser).isEqualTo(expect);
+        assertThat(apiUser).isEqualTo(Optional.of(expect));
     }
 
     private void mockPasswordHashingService() {
