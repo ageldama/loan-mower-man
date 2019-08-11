@@ -6,6 +6,6 @@ public interface Predictor {
     LoanAmountPrediction predict(
             final Integer year,
             final Integer month,
-            final Integer instituteCode
-    ) throws NoDataException;
+            final String instituteCode
+    ) throws NoDataException, PredictionNotPreparedException;
 }

@@ -51,8 +51,8 @@ public class LoanAmountPredictionService {
             final String predictorStrategy,
             final Integer year,
             final Integer month,
-            final Integer instituteCode
-    ) throws NoSuchPredictorStrategyException, NoDataException {
+            final String instituteCode
+    ) throws NoSuchPredictorStrategyException, NoDataException, PredictionNotPreparedException {
         if (!predictorStrategies.containsKey(predictorStrategy)) {
             throw new NoSuchPredictorStrategyException(predictorStrategy);
         }

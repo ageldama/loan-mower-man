@@ -12,8 +12,8 @@ public class AveragePredictor implements Predictor, PredictionPrepper {
 
     @Override
     public LoanAmountPrediction predict(
-            Integer year, Integer month, Integer instituteCode
-    ) throws NoDataException {
+            Integer year, Integer month, String instituteCode
+    ) throws NoDataException, PredictionNotPreparedException {
         // TODO
         return null;
     }

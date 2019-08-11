@@ -4,6 +4,7 @@ import jhyun.loanmowerman.controllers.aggregations.NoDataException;
 import jhyun.loanmowerman.services.predictions.AveragePredictor;
 import jhyun.loanmowerman.services.predictions.LoanAmountPrediction;
 import jhyun.loanmowerman.services.predictions.NoSuchPredictorStrategyException;
+import jhyun.loanmowerman.services.predictions.PredictionNotPreparedException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -36,17 +37,17 @@ public class LoanAmountPredictionServiceTest {
     }
 
     @Test
-    public void predictWithAverageStrategy() throws NoSuchPredictorStrategyException, NoDataException {
+    public void predictWithAverageStrategy() throws NoSuchPredictorStrategyException, NoDataException, PredictionNotPreparedException {
         final LoanAmountPrediction prediction = loanAmountPredictionService.predict(
                 "average",
-                2018, 2, 2);
+                2018, 2, "bnk");
         verify(averagePredictor, times(1))
-                .predict(eq(2018), eq(2), eq(2));
+                .predict(eq(2018), eq(2), eq("bnk"));
     }
 
     @Test(expected = NoSuchPredictorStrategyException.class)
-    public void predictWithInvalidStrategy() throws NoSuchPredictorStrategyException, NoDataException {
+    public void predictWithInvalidStrategy() throws NoSuchPredictorStrategyException, NoDataException, PredictionNotPreparedException {
         loanAmountPredictionService.predict("INVALID_STRATEGY",
-                9999, 13, 1234);
+                9999, 13, "bnk");
     }
 }
