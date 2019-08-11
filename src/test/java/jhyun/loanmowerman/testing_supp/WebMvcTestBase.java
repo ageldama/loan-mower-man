@@ -1,5 +1,8 @@
 package jhyun.loanmowerman.testing_supp;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jhyun.loanmowerman.controllers.api_user.SignInForm;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -7,10 +10,7 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -47,12 +47,20 @@ public class WebMvcTestBase {
     protected final String apiUserPw = "bar";
 
     protected HttpHeaders apiUserJwtHeaders() {
+        ObjectMapper objectMapper = new ObjectMapper();
         // signin
-        LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        HashMap form = new HashMap();
-        form.put("id", apiUserId);
-        form.put("password", apiUserPw);
-        HttpEntity request = new HttpEntity(form, headers);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        SignInForm signInForm = new SignInForm();
+        signInForm.setId(apiUserId);
+        signInForm.setPassword(apiUserPw);
+        String jsonBody = "";
+        try {
+            jsonBody = objectMapper.writeValueAsString(signInForm);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        HttpEntity request = new HttpEntity(jsonBody, headers);
         ResponseEntity<String> response =
                 restTemplate.exchange(apiBase() + "/api-user/signin", HttpMethod.POST,
                         request, String.class);

@@ -1,5 +1,9 @@
 package jhyun.loanmowerman.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jhyun.loanmowerman.controllers.api_user.SignInForm;
+import jhyun.loanmowerman.controllers.api_user.SignUpForm;
 import jhyun.loanmowerman.services.ApiUserService;
 import jhyun.loanmowerman.testing_supp.WebMvcTestBase;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +12,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.core.parameters.P;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -22,24 +27,42 @@ public class ApiUserControllerTest extends WebMvcTestBase {
     @Autowired
     private ApiUserService apiUserService;
 
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @After
     public void purgeAllApiUsers() {
         apiUserService.purgeAllApiUsers();
     }
 
+    private HttpEntity<String> makeSignUpRequest(final String id, final String pw) {
+        val headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        String jsonBody = "";
+        try {
+            jsonBody = objectMapper.writeValueAsString(new SignUpForm(id, pw));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        return new HttpEntity<>(jsonBody, headers);
+    }
+
+    private HttpEntity<String> makeSignInRequest(final String id, final String pw) {
+        val headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        String jsonBody = "";
+        try {
+            jsonBody = objectMapper.writeValueAsString(new SignInForm(id, pw));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        return new HttpEntity<>(jsonBody, headers);
+    }
+
     @Test
     public void testSignUpOk() {
-        val headers = new LinkedMultiValueMap<String, String>();
-
-        val form = new HashMap();
-        form.put("id", "foo");
-        form.put("password", "bar");
-
-        val request = new HttpEntity(form, headers);
-
         final ResponseEntity<String> response =
                 restTemplate.exchange(apiBase() + "/api-user/signup", HttpMethod.POST,
-                        request, String.class);
+                        makeSignUpRequest("foo", "bar"), String.class);
         assertThat(response.getHeaders()).containsKey("Token");
         assertThat(response.getHeaders().getFirst("Token")).isNotBlank();
         assertThat(response.getStatusCodeValue()).isEqualTo(201);
@@ -50,14 +73,9 @@ public class ApiUserControllerTest extends WebMvcTestBase {
         // create: 'foo'
         apiUserService.signUp("foo", "bar");
         //
-        val headers = new LinkedMultiValueMap<String, String>();
-        val form = new HashMap();
-        form.put("id", "foo");
-        form.put("password", "bar");
-        val request = new HttpEntity(form, headers);
         assertThatThrownBy(() ->
                 restTemplate.exchange(apiBase() + "/api-user/signup", HttpMethod.POST,
-                        request, String.class))
+                        makeSignUpRequest("foo", "bar"), String.class))
                 .isInstanceOf(HttpClientErrorException.class)
                 .satisfies(o -> ((HttpClientErrorException) o).getStatusCode().equals(HttpStatus.BAD_REQUEST));
     }
@@ -67,14 +85,9 @@ public class ApiUserControllerTest extends WebMvcTestBase {
         // create: 'foo'
         apiUserService.signUp("foo", "bar");
         //
-        val headers = new LinkedMultiValueMap<String, String>();
-        val form = new HashMap();
-        form.put("id", "foo");
-        form.put("password", "bar");
-        val request = new HttpEntity(form, headers);
         final ResponseEntity<String> response =
                 restTemplate.exchange(apiBase() + "/api-user/signin", HttpMethod.POST,
-                        request, String.class);
+                        makeSignInRequest("foo", "bar"), String.class);
         assertThat(response.getHeaders()).containsKey("Token");
         assertThat(response.getHeaders().getFirst("Token")).isNotBlank();
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
@@ -85,14 +98,9 @@ public class ApiUserControllerTest extends WebMvcTestBase {
         // create: 'foo'
         apiUserService.signUp("foo", "bar");
         //
-        val headers = new LinkedMultiValueMap<String, String>();
-        val form = new HashMap();
-        form.put("id", "zoo");
-        form.put("password", "bar");
-        val request = new HttpEntity(form, headers);
         assertThatThrownBy(() ->
                 restTemplate.exchange(apiBase() + "/api-user/signin", HttpMethod.POST,
-                        request, String.class))
+                        makeSignInRequest("WRONG_ID", "bar"), String.class))
                 .isInstanceOf(HttpClientErrorException.class)
                 .satisfies(o -> ((HttpClientErrorException) o).getStatusCode().equals(HttpStatus.BAD_REQUEST));
     }
@@ -102,14 +110,9 @@ public class ApiUserControllerTest extends WebMvcTestBase {
         // create: 'foo'
         apiUserService.signUp("foo", "bar");
         //
-        val headers = new LinkedMultiValueMap<String, String>();
-        val form = new HashMap();
-        form.put("id", "foo");
-        form.put("password", "spameggs");
-        val request = new HttpEntity(form, headers);
         assertThatThrownBy(() ->
                 restTemplate.exchange(apiBase() + "/api-user/signin", HttpMethod.POST,
-                        request, String.class))
+                        makeSignInRequest("foo", "WRONG_PASSWORD"), String.class))
                 .isInstanceOf(HttpClientErrorException.class)
                 .satisfies(o -> ((HttpClientErrorException) o).getStatusCode().equals(HttpStatus.BAD_REQUEST));
     }
@@ -119,14 +122,9 @@ public class ApiUserControllerTest extends WebMvcTestBase {
         // create: 'foo'
         apiUserService.signUp("foo", "bar");
         // initial sign-in
-        val headers = new LinkedMultiValueMap<String, String>();
-        val form = new HashMap();
-        form.put("id", "foo");
-        form.put("password", "bar");
-        val request = new HttpEntity(form, headers);
         ResponseEntity<String> response =
                 restTemplate.exchange(apiBase() + "/api-user/signin", HttpMethod.POST,
-                        request, String.class);
+                        makeSignInRequest("foo", "bar"), String.class);
         assertThat(response.getHeaders()).containsKey("Token");
         assertThat(response.getHeaders().getFirst("Token")).isNotBlank();
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
@@ -176,14 +174,9 @@ public class ApiUserControllerTest extends WebMvcTestBase {
         // create: 'foo'
         apiUserService.signUp("foo", "bar");
         // signin
-        LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        HashMap form = new HashMap();
-        form.put("id", "foo");
-        form.put("password", "bar");
-        HttpEntity request = new HttpEntity(form, headers);
         ResponseEntity<String> response =
                 restTemplate.exchange(apiBase() + "/api-user/signin", HttpMethod.POST,
-                        request, String.class);
+                        makeSignInRequest("foo", "bar"), String.class);
         assertThat(response.getHeaders()).containsKey("Token");
         assertThat(response.getHeaders().getFirst("Token")).isNotBlank();
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
@@ -203,14 +196,9 @@ public class ApiUserControllerTest extends WebMvcTestBase {
         // create: 'foo'
         apiUserService.signUp("foo", "bar");
         // signin
-        LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        HashMap form = new HashMap();
-        form.put("id", "foo");
-        form.put("password", "bar");
-        HttpEntity request = new HttpEntity(form, headers);
         ResponseEntity<String> response =
                 restTemplate.exchange(apiBase() + "/api-user/signin", HttpMethod.POST,
-                        request, String.class);
+                        makeSignInRequest("foo", "bar"), String.class);
         assertThat(response.getHeaders()).containsKey("Token");
         assertThat(response.getHeaders().getFirst("Token")).isNotBlank();
         assertThat(response.getStatusCodeValue()).isEqualTo(200);

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Optional;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -51,9 +52,10 @@ public class ApiUserController {
     })
     @RequestMapping(path = "/signup",
             method = POST,
+            consumes = APPLICATION_JSON_UTF8_VALUE,
             produces = TEXT_PLAIN_VALUE)
     public ResponseEntity<String> signUp(
-            @ApiParam(value="HTTP POST Form Field으로 `id`, `password` 키의 값을 전달")
+            @ApiParam(value="생성할 API사용자 ID, PW")
             @RequestBody SignUpForm signUpForm
     ) throws IOException, URISyntaxException, ApiUserDuplicatedException {
         final Optional<ApiUser> apiUser = apiUserService.signUp(signUpForm.getId(), signUpForm.getPassword());
@@ -73,9 +75,10 @@ public class ApiUserController {
     })
     @RequestMapping(path = "/signin",
             method = POST,
+            consumes = APPLICATION_JSON_UTF8_VALUE,
             produces = TEXT_PLAIN_VALUE)
     public ResponseEntity<String> signIn(
-            @ApiParam(value="HTTP POST Form Field으로 `id`, `password` 키의 값을 전달")
+            @ApiParam(value="로그인할 API사용자 ID, PW")
             @RequestBody SignInForm signInForm
     ) throws IOException, URISyntaxException {
         val apiUser = apiUserService.signIn(signInForm.getId(), signInForm.getPassword());
