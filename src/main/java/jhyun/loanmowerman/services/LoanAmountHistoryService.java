@@ -9,6 +9,7 @@ import jhyun.loanmowerman.tabular_data.LoanAmountHistory;
 import jhyun.loanmowerman.tabular_data.LoanAmountHistoryColumnarCsvReader;
 import jhyun.loanmowerman.value_sanitizers.BankNameSanitizer;
 import jhyun.loanmowerman.value_sanitizers.IntegerSanitizer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+@Slf4j
 @Service
 public class LoanAmountHistoryService {
 
@@ -62,6 +64,8 @@ public class LoanAmountHistoryService {
                     }
                 }
                 // create(loan-amount)
+                log.trace("SAVE loan-amount: institute({}) year({}) month({})",
+                        institute.get().getCode(), hist.getYear(), hist.getMonth());
                 final Integer amount = amountsPerInstitute.get(idxAndName);
                 this.loanAmountRepository.save(
                         new LoanAmount(institute.get(), hist.getYear(), hist.getMonth(), amount));

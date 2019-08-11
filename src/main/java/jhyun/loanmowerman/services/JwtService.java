@@ -19,13 +19,10 @@ import static java.time.ZoneOffset.UTC;
 
 @Component
 public class JwtService {
-    // @Value("${jwt.token.clientSecret}")
     private String clientSecret = "secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret";
 
-    // @Value("${jwt.token.issuer}")
     private String issuer = "ageldama@gmail.com";
 
-    // @Value("${jwt.token.expirySeconds}")
     private Long expirySeconds = 7200L;
 
     private ApiUserRepository apiUserRepository;
