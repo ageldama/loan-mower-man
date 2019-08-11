@@ -18,7 +18,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Api
+@Api(description = "CSV업로드, DB정리, 입력된 은행목록 나열")
 @RequestMapping
 @RestController
 public class IndexController {
@@ -56,6 +56,10 @@ public class IndexController {
         return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("Purged");
     }
 
+    @ApiOperation(value = "입력된 모든 은행의 이름 목록")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공")
+    })
     @RequestMapping(path = "/institute-names", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<String> listAllInstituteNames() {
