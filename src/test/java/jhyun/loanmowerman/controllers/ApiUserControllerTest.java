@@ -114,10 +114,62 @@ public class ApiUserControllerTest extends WebMvcTestBase {
                 .satisfies(o -> ((HttpClientErrorException) o).getStatusCode().equals(HttpStatus.BAD_REQUEST));
     }
 
-    // TODO: refreshOk
+    @Test
+    public void testRefreshOk() throws InterruptedException {
+        // create: 'foo'
+        apiUserService.signUp("foo", "bar");
+        // initial sign-in
+        val headers = new LinkedMultiValueMap<String, String>();
+        val form = new HashMap();
+        form.put("id", "foo");
+        form.put("password", "bar");
+        val request = new HttpEntity(form, headers);
+        ResponseEntity<String> response =
+                restTemplate.exchange(apiBase() + "/api-user/signin", HttpMethod.POST,
+                        request, String.class);
+        assertThat(response.getHeaders()).containsKey("Token");
+        assertThat(response.getHeaders().getFirst("Token")).isNotBlank();
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+        final String token1 = response.getHeaders().getFirst("Token");
+        // access authorized endpoint with initial token
+        final HttpHeaders headers2 = new HttpHeaders();
+        headers2.add("Authorization", String.format("Bearer %s", token1));
+        final HttpEntity request2 = new HttpEntity(headers2);
+        response =
+                restTemplate.exchange(apiBase() + "/institute-names", HttpMethod.GET,
+                        request2, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        // refresh the token
+        response =
+                restTemplate.exchange(apiBase() + "/api-user/refresh", HttpMethod.GET,
+                        request2, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        final String token2 = response.getHeaders().getFirst("Token");
+        assertThat(token2).isNotBlank();
+        // access authorized endpoint with refreshed token
+        final HttpHeaders headers3 = new HttpHeaders();
+        headers2.add("Authorization", String.format("Bearer %s", token2));
+        final HttpEntity request3 = new HttpEntity(headers3);
+        response =
+                restTemplate.exchange(apiBase() + "/institute-names", HttpMethod.GET,
+                        request3, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
 
-    // TODO: refreshInvalidToken
-
+    @Test
+    public void testRefreshWithInvalidToken() throws InterruptedException {
+        // create: 'foo'
+        apiUserService.signUp("foo", "bar");
+        // refresh the token
+        final HttpHeaders headers2 = new HttpHeaders();
+        headers2.add("Authorization", String.format("Bearer %s", "foobar?"));
+        final HttpEntity request2 = new HttpEntity(headers2);
+        assertThatThrownBy(() ->
+                restTemplate.exchange(apiBase() + "/api-user/refresh", HttpMethod.GET,
+                        request2, String.class))
+                .isInstanceOf(HttpClientErrorException.class)
+                .satisfies(o -> ((HttpClientErrorException) o).getStatusCode().equals(HttpStatus.BAD_REQUEST));
+    }
 
     @Test
     public void testAuthenticationOk() {

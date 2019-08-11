@@ -23,7 +23,9 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         try {
             final Optional<ApiUser> apiUser = jwtService.verify((String) authentication.getCredentials());
-            // TODO:
+            if (!apiUser.isPresent()) {
+                throw new JwtAuthenticationException("Failed to verify token", null);
+            }
             return new JwtAuthenticatedProfile(apiUser.get());
         } catch (Exception e) {
             throw new JwtAuthenticationException("Failed to verify token", e);

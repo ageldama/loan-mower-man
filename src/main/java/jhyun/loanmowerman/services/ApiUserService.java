@@ -45,6 +45,10 @@ public class ApiUserService {
         return Optional.empty();
     }
 
+    public Optional<ApiUser> findById(final String id) {
+        return apiUserRepository.findById(id);
+    }
+
     // Testing Support
     @Transactional
     public void purgeAllApiUsers() {
