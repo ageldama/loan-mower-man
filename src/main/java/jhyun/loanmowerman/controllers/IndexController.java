@@ -2,6 +2,7 @@ package jhyun.loanmowerman.controllers;
 
 import io.swagger.annotations.*;
 import jhyun.loanmowerman.services.LoanAmountHistoryService;
+import jhyun.loanmowerman.services.LoanAmountPredictionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,9 +26,15 @@ public class IndexController {
 
     private LoanAmountHistoryService loanAmountHistoryService;
 
+    private LoanAmountPredictionService loanAmountPredictionService;
+
     @Autowired
-    public IndexController(LoanAmountHistoryService loanAmountHistoryService) {
+    public IndexController(
+            LoanAmountHistoryService loanAmountHistoryService,
+            LoanAmountPredictionService loanAmountPredictionService
+    ) {
         this.loanAmountHistoryService = loanAmountHistoryService;
+        this.loanAmountPredictionService = loanAmountPredictionService;
     }
 
     @ApiOperation(value = "CSV 파일을 파싱하여 DB에 저장한다")
@@ -42,6 +49,7 @@ public class IndexController {
             @RequestBody String requestBody
     ) throws URISyntaxException, IOException {
         loanAmountHistoryService.saveCsv(new StringBufferInputStream(requestBody));
+        loanAmountPredictionService.prepareForStrategies();
         return ResponseEntity.created(new URI("/history")).body("Created");
     }
 

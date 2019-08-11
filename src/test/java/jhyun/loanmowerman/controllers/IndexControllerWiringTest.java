@@ -1,6 +1,7 @@
 package jhyun.loanmowerman.controllers;
 
 import jhyun.loanmowerman.services.LoanAmountHistoryService;
+import jhyun.loanmowerman.services.LoanAmountPredictionService;
 import jhyun.loanmowerman.testing_supp.Examples;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +23,9 @@ public class IndexControllerWiringTest {
     @Mock
     private LoanAmountHistoryService loanAmountHistoryService;
 
+    @Mock
+    private LoanAmountPredictionService loanAmountPredictionService;
+
     @InjectMocks
     private IndexController indexController;
 
@@ -31,8 +35,10 @@ public class IndexControllerWiringTest {
         verify(loanAmountHistoryService, times(1)).purgeAll();
     }
 
+    @Test
     public void testSaveCsv() throws IOException, URISyntaxException {
         indexController.putCsv(Examples.urlAsString(Examples.exampleCsv3Lines()));
         verify(loanAmountHistoryService, times(1)).saveCsv(any(InputStream.class));
+        verify(loanAmountPredictionService, times(1)).prepareForStrategies();
     }
 }
