@@ -77,11 +77,15 @@ DONE: README 보강
   1. 구현한 기능들과 구현한 형태와 특징 설명
 
 
-
-
-// TODO: predictor -- regression?
+DONE: predictor -- regression?
     - webmvc, swagger
     - testcases
+
+
+
+// TODO: average, average_all, linear_regression 실행해보면서 편차 살펴보기
+    - 먼저 average, average_all 테스트들도 얼추 비슷한 dataset에 기반하도록? (아님 linear_regression을?)
+    - 그래프 찍어볼까?
 
 
 // TODO: 새로 git clone해서 `./mvnw package` 해봐 -- check

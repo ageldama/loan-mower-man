@@ -20,6 +20,7 @@ public class LoanAmountPredictionService {
 
     private AveragePredictor averagePredictor;
     private AverageAllPredictor averageAllPredictor;
+    private WekaLinearRegressionPredictor wekaLinearRegressionPredictor;
 
     private Map<String, Predictor> predictorStrategies;
     private List<PredictionPrepper> predictionPreppers;
@@ -29,16 +30,19 @@ public class LoanAmountPredictionService {
     @Autowired
     public LoanAmountPredictionService(
             AveragePredictor averagePredictor,
-            AverageAllPredictor AverageAllPredictor
+            AverageAllPredictor AverageAllPredictor,
+            WekaLinearRegressionPredictor wekaLinearRegressionPredictor
     ) {
         this.averagePredictor = averagePredictor;
         this.averageAllPredictor = AverageAllPredictor;
+        this.wekaLinearRegressionPredictor = wekaLinearRegressionPredictor;
         //
         predictorStrategies = ImmutableMap.of(
                 "average", averagePredictor,
-                "average_all", averageAllPredictor
+                "average_all", averageAllPredictor,
+                "linear_regression", wekaLinearRegressionPredictor
         );
-        predictionPreppers = ImmutableList.of(averagePredictor, averageAllPredictor);
+        predictionPreppers = ImmutableList.of(averagePredictor, averageAllPredictor, wekaLinearRegressionPredictor);
     }
 
     public Future<?> prepareForStrategies() {

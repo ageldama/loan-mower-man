@@ -45,11 +45,11 @@ public class LoanAmountPredictionController {
             @RequestBody
                     LoanAmountPredictionOfMonthRequest request,
             @ApiParam(
-                    value = "추정전략코드",
-                    defaultValue = "average",
-                    allowableValues = "average, average_all"
+                    value = "추정에 사용할 전략의 코드이름",
+                    defaultValue = "linear_regression",
+                    allowableValues = "average, average_all, linear_regression"
             )
-            @RequestParam(required = false, name = "strategy", defaultValue = "average") String strategy
+            @RequestParam(required = false, name = "strategy", defaultValue = "linear_regression") String strategy
     ) throws NoDataException, NoSuchPredictorStrategyException, PredictionNotPreparedException {
         final int year = 2018; // 일단 고정
         final List<String> instituteCodes =

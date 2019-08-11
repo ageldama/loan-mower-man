@@ -26,6 +26,9 @@ public class LoanAmountPredictionServiceTest {
     @Mock
     private AverageAllPredictor averageAllPredictor;
 
+    @Mock
+    private WekaLinearRegressionPredictor wekaLinearRegressionPredictor;
+
     @InjectMocks
     private LoanAmountPredictionService loanAmountPredictionService;
 
@@ -51,6 +54,15 @@ public class LoanAmountPredictionServiceTest {
                 "average_all",
                 2018, 2, "bnk");
         verify(averageAllPredictor, times(1))
+                .predict(eq(2018), eq(2), eq("bnk"));
+    }
+
+    @Test
+    public void predictWithWekaLinearRegressionStrategy() throws NoSuchPredictorStrategyException, NoDataException, PredictionNotPreparedException {
+        final LoanAmountPrediction prediction = loanAmountPredictionService.predict(
+                "linear_regression",
+                2018, 2, "bnk");
+        verify(wekaLinearRegressionPredictor, times(1))
                 .predict(eq(2018), eq(2), eq("bnk"));
     }
 
