@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import jhyun.loanmowerman.controllers.aggregations.NoDataException;
 import jhyun.loanmowerman.services.predictions.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
+@Slf4j
 @Service
 public class LoanAmountPredictionService {
 
@@ -32,11 +35,15 @@ public class LoanAmountPredictionService {
         predictionPreppers = ImmutableList.of(averagePredictor);
     }
 
-    public void prepareForStrategies() {
-        predictionPrepperExecutor.submit(() -> {
+    public Future<?> prepareForStrategies() {
+        return predictionPrepperExecutor.submit(() -> {
+            log.info("Prediction preparation initiated: {}", this.predictionPreppers);
             for (PredictionPrepper prepper : this.predictionPreppers) {
+                log.info("Prediction preparation starting: {}", prepper);
                 prepper.prepare();
+                log.info("Prediction preparation done: {}", prepper);
             }
+            log.info("Prediction preparation all finished.");
         });
     }
 
