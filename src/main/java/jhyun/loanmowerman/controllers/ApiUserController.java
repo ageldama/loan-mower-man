@@ -1,6 +1,6 @@
 package jhyun.loanmowerman.controllers;
 
-import io.swagger.annotations.Api;
+import io.swagger.annotations.*;
 import jhyun.loanmowerman.controllers.api_user.ApiUserDuplicatedException;
 import jhyun.loanmowerman.controllers.api_user.SignInForm;
 import jhyun.loanmowerman.controllers.api_user.SignUpForm;
@@ -26,8 +26,7 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-// TODO: swagger
-@Api
+@Api(description = "API사용자 등록, JWT토큰 발급, JWT토큰 갱신")
 @RequestMapping(path = "/api-user")
 @RestController
 public class ApiUserController {
@@ -45,10 +44,16 @@ public class ApiUserController {
         this.jwtService = jwtService;
     }
 
+    @ApiOperation(value = "새로운 API사용자 등록")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "등록 완료. 등록한 사용자ID을 본문으로 응답. 응답헤더의 `Token`으로 생성한 사용자를 위한 JWT토큰을 넣어 응답"),
+            @ApiResponse(code = 400, message = "이미 지정한 ID의 사용자가 있을때")
+    })
     @RequestMapping(path = "/signup",
             method = POST,
             produces = TEXT_PLAIN_VALUE)
     public ResponseEntity<String> signUp(
+            @ApiParam(value="HTTP POST Form Field으로 `id`, `password` 키의 값을 전달")
             @RequestBody SignUpForm signUpForm
     ) throws IOException, URISyntaxException, ApiUserDuplicatedException {
         final Optional<ApiUser> apiUser = apiUserService.signUp(signUpForm.getId(), signUpForm.getPassword());
@@ -61,10 +66,16 @@ public class ApiUserController {
                 .body(apiUser.get().getId());
     }
 
+    @ApiOperation(value = "등록된 API사용자의 JWT 토큰 발급")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "사용자ID을 본문으로 응답. 응답헤더의 `Token`으 JWT토큰을 넣어 응답"),
+            @ApiResponse(code = 400, message = "사용자ID/Password 틀림")
+    })
     @RequestMapping(path = "/signin",
             method = POST,
             produces = TEXT_PLAIN_VALUE)
     public ResponseEntity<String> signIn(
+            @ApiParam(value="HTTP POST Form Field으로 `id`, `password` 키의 값을 전달")
             @RequestBody SignInForm signInForm
     ) throws IOException, URISyntaxException {
         val apiUser = apiUserService.signIn(signInForm.getId(), signInForm.getPassword());
@@ -78,6 +89,10 @@ public class ApiUserController {
         }
     }
 
+    @ApiOperation(value = "JWT토큰 갱신 (`Authorization` 헤더 인증 필요)")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "응답헤더의 `Token`으 JWT토큰을 넣어 응답"),
+    })
     @RequestMapping(path = "/refresh",
             method = GET,
             produces = TEXT_PLAIN_VALUE)
