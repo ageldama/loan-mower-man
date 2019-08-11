@@ -33,7 +33,7 @@ public class ApiUserServiceTest {
     public void testSignUpOk() {
         mockPasswordHashingService();
         //
-        final ApiUser apiUser = apiUserService.signUp("foobar", "spameggs");
+        final Optional<ApiUser> apiUser = apiUserService.signUp("foobar", "spameggs");
         //
         final ApiUser expect = new ApiUser("foobar", ">>>spameggs<<<");
         verify(apiUserRepository, times(1))

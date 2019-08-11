@@ -8,6 +8,8 @@ DONE: GET 은행목록 (+native-query?)
     // TODO: JWT
 
 
+// TODO: JWT @Value?
+
 
 
     // TODO: GET 연도별 각 금융기관의 지원금액 합계
@@ -20,6 +22,8 @@ DONE: GET 은행목록 (+native-query?)
 
     // TODO: 특정 은행의 특정 달에 대해서 2018 년도 해당 달에 금융지원 금액을 예측하는 API
 
+
+// TODO: exceptions + global-advice
 
 // TODO: Swagger 점검/보강
 

@@ -5,41 +5,25 @@ import jhyun.loanmowerman.services.LoanAmountHistoryService;
 import jhyun.loanmowerman.storage.repositories.InstituteRepository;
 import jhyun.loanmowerman.storage.repositories.LoanAmountRepository;
 import jhyun.loanmowerman.testing_supp.Examples;
+import jhyun.loanmowerman.testing_supp.WebMvcTestBase;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class IndexControllerTest {
-    @LocalServerPort
-    private int port;
-
+public class IndexControllerTest extends WebMvcTestBase {
     @Autowired
     private InstituteRepository instituteRepository;
 
@@ -48,20 +32,6 @@ public class IndexControllerTest {
 
     @Autowired
     private LoanAmountHistoryService loanAmountHistoryService;
-
-    private RestTemplate restTemplate;
-
-    @Before
-    public void setUp() {
-        val httpClient = HttpClientBuilder.create().disableRedirectHandling().build();
-        restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory(httpClient));
-        restTemplate.getMessageConverters()
-                .add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
-    }
-
-    private String apiBase() {
-        return String.format("http://localhost:%s", port);
-    }
 
     @Test
     public void testPurgeAllOk() {

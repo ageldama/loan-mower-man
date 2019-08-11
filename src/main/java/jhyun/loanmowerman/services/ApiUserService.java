@@ -25,10 +25,15 @@ public class ApiUserService {
     }
 
     @Transactional
-    public ApiUser signUp(final String id, final String password) {
-        final ApiUser apiUser = new ApiUser(id, passwordHashingService.hash(password));
-        apiUserRepository.save(apiUser);
-        return apiUser;
+    public Optional<ApiUser> signUp(final String id, final String password) {
+        Optional<ApiUser> apiUser = apiUserRepository.findById(id);
+        if (apiUser.isPresent()) {
+            return Optional.empty(); // Should not create/overwrite!
+        } else {
+            final ApiUser apiUser_ = new ApiUser(id, passwordHashingService.hash(password));
+            apiUserRepository.save(apiUser_);
+            return Optional.of(apiUser_);
+        }
     }
 
     public Optional<ApiUser> signIn(final String id, final String password) {
@@ -38,5 +43,11 @@ public class ApiUserService {
             return apiUser;
         }
         return Optional.empty();
+    }
+
+    // Testing Support
+    @Transactional
+    public void purgeAllApiUsers() {
+        apiUserRepository.deleteAll();
     }
 }
