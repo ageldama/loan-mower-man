@@ -1,6 +1,7 @@
 package jhyun.loanmowerman.services;
 
-import com.google.common.collect.ImmutableMap;
+import jhyun.loanmowerman.services.loan_amount_history_aggregations.MinMaxOfInstitute;
+import jhyun.loanmowerman.services.loan_amount_history_aggregations.YearAndAmountEntry;
 import jhyun.loanmowerman.storage.entities.Institute;
 import jhyun.loanmowerman.testing_supp.Examples;
 import org.junit.Test;
@@ -11,7 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -57,11 +57,11 @@ public class LoanAmountHistoryAggregationServiceTest {
         final InputStream inputStream = Examples.urlAsInputStream(Examples.exampleCsv());
         loanAmountHistoryService.saveCsv(inputStream);
         //
-        final Map<String, Object> result = loanAmountHistoryAggregationService.findMinMaxOfInstitute("외환은행");
-        assertThat(result).containsKey("bank").containsKey("support_amount");
-        assertThat(result.get("bank")).isEqualTo("외환은행");
-        assertThat((List)result.get("support_amount")).hasSize(2)
-                .containsExactly(ImmutableMap.of("year", 2017, "amount", 0L),
-                        ImmutableMap.of("year", 2015, "amount", 20421L));
+        final MinMaxOfInstitute result = loanAmountHistoryAggregationService.findMinMaxOfInstitute("외환은행");
+        assertThat(result.getInstituteName()).isEqualTo("외환은행");
+        assertThat(result.getMinMax()).hasSize(2)
+                .containsExactly(
+                        YearAndAmountEntry.builder().year(2017).amount(0L).build(),
+                        YearAndAmountEntry.builder().year(2015).amount(20421L).build());
     }
 }
