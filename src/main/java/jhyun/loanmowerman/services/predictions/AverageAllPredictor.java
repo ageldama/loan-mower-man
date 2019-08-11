@@ -6,14 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * 해당 은행의 매년 같은 달의 지원금액 평균으로 예측.
+ * 해당 은행의 모든 해, 모든 달의 지원금액 평균으로 예측.
  */
 @Service
-public class AveragePredictor implements Predictor, PredictionPrepper {
+public class AverageAllPredictor implements Predictor, PredictionPrepper {
     private LoanAmountRepository loanAmountRepository;
 
     @Autowired
-    public AveragePredictor(LoanAmountRepository loanAmountRepository) {
+    public AverageAllPredictor(LoanAmountRepository loanAmountRepository) {
         this.loanAmountRepository = loanAmountRepository;
     }
 
@@ -26,7 +26,7 @@ public class AveragePredictor implements Predictor, PredictionPrepper {
     public LoanAmountPrediction predict(
             Integer year, Integer month, String instituteCode
     ) throws NoDataException, PredictionNotPreparedException {
-        final Long avg = loanAmountRepository.averageAmountOfMonthByInstitute(instituteCode, month);
+        final Long avg = loanAmountRepository.averageAmountByInstitute(instituteCode);
         return LoanAmountPrediction.builder()
                 .year(year).month(month).bank(instituteCode)
                 .amount(avg)

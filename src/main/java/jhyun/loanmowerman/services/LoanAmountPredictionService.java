@@ -19,6 +19,7 @@ import java.util.concurrent.Future;
 public class LoanAmountPredictionService {
 
     private AveragePredictor averagePredictor;
+    private AverageAllPredictor averageAllPredictor;
 
     private Map<String, Predictor> predictorStrategies;
     private List<PredictionPrepper> predictionPreppers;
@@ -26,13 +27,18 @@ public class LoanAmountPredictionService {
     private ExecutorService predictionPrepperExecutor = Executors.newSingleThreadExecutor();
 
     @Autowired
-    public LoanAmountPredictionService(AveragePredictor averagePredictor) {
+    public LoanAmountPredictionService(
+            AveragePredictor averagePredictor,
+            AverageAllPredictor AverageAllPredictor
+    ) {
         this.averagePredictor = averagePredictor;
+        this.averageAllPredictor = AverageAllPredictor;
         //
         predictorStrategies = ImmutableMap.of(
-                "average", averagePredictor
+                "average", averagePredictor,
+                "average_all", averageAllPredictor
         );
-        predictionPreppers = ImmutableList.of(averagePredictor);
+        predictionPreppers = ImmutableList.of(averagePredictor, averageAllPredictor);
     }
 
     public Future<?> prepareForStrategies() {

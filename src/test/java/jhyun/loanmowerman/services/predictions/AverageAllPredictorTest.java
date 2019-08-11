@@ -18,10 +18,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AveragePredictorTest {
+public class AverageAllPredictorTest {
 
     @Autowired
-    private AveragePredictor averagePredictor;
+    private AverageAllPredictor predictor;
 
     @Autowired
     private LoanAmountHistoryService loanAmountHistoryService;
@@ -39,17 +39,17 @@ public class AveragePredictorTest {
 
     @Test
     public void predict() throws NoDataException, PredictionNotPreparedException {
-        final LoanAmountPrediction result = averagePredictor.predict(2018, 2, "2");
+        final LoanAmountPrediction result = predictor.predict(2018, 2, "2");
         assertThat(result).isNotNull();
         assertThat(result.getBank()).isNotBlank().isEqualTo("2");
         assertThat(result.getYear()).isEqualTo(2018);
         assertThat(result.getMonth()).isEqualTo(2);
-        assertThat(result.getAmount()).isNotNull().isPositive();    // 4732
+        assertThat(result.getAmount()).isNotNull().isPositive(); // 5195
     }
 
     @Test
     public void predictWithNoData() throws NoDataException, PredictionNotPreparedException {
-        final LoanAmountPrediction result = averagePredictor.predict(2018, 24, "INVALID_BANK");
+        final LoanAmountPrediction result = predictor.predict(2018, 24, "INVALID_BANK");
         assertThat(result).isNotNull();
         assertThat(result.getBank()).isNotBlank();
         assertThat(result.getYear()).isEqualTo(2018);

@@ -15,5 +15,8 @@ public interface LoanAmountRepository extends PagingAndSortingRepository<LoanAmo
     Long sumAmountOfYearByInstitute(String instituteCode, Integer year);
 
     @Query("SELECT AVG(l.amount) FROM LoanAmount l WHERE l.month = ?2 AND l.institute.code = ?1")
-    Long averageAmountOfYearAndMonthByInstitute(String instituteCode, Integer month);
+    Long averageAmountOfMonthByInstitute(String instituteCode, Integer month);
+
+    @Query("SELECT AVG(l.amount) FROM LoanAmount l WHERE l.institute.code = ?1")
+    Long averageAmountByInstitute(String instituteCode);
 }

@@ -1,10 +1,7 @@
 package jhyun.loanmowerman.services;
 
 import jhyun.loanmowerman.controllers.aggregations.NoDataException;
-import jhyun.loanmowerman.services.predictions.AveragePredictor;
-import jhyun.loanmowerman.services.predictions.LoanAmountPrediction;
-import jhyun.loanmowerman.services.predictions.NoSuchPredictorStrategyException;
-import jhyun.loanmowerman.services.predictions.PredictionNotPreparedException;
+import jhyun.loanmowerman.services.predictions.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -26,6 +23,9 @@ public class LoanAmountPredictionServiceTest {
     @Mock
     private AveragePredictor averagePredictor;
 
+    @Mock
+    private AverageAllPredictor averageAllPredictor;
+
     @InjectMocks
     private LoanAmountPredictionService loanAmountPredictionService;
 
@@ -42,6 +42,15 @@ public class LoanAmountPredictionServiceTest {
                 "average",
                 2018, 2, "bnk");
         verify(averagePredictor, times(1))
+                .predict(eq(2018), eq(2), eq("bnk"));
+    }
+
+    @Test
+    public void predictWithAverageAllStrategy() throws NoSuchPredictorStrategyException, NoDataException, PredictionNotPreparedException {
+        final LoanAmountPrediction prediction = loanAmountPredictionService.predict(
+                "average_all",
+                2018, 2, "bnk");
+        verify(averageAllPredictor, times(1))
                 .predict(eq(2018), eq(2), eq("bnk"));
     }
 

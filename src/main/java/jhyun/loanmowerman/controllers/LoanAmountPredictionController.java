@@ -47,7 +47,7 @@ public class LoanAmountPredictionController {
             @ApiParam(
                     value = "추정전략코드",
                     defaultValue = "average",
-                    allowableValues = "average"
+                    allowableValues = "average, average_all"
             )
             @RequestParam(required = false, name = "strategy", defaultValue = "average") String strategy
     ) throws NoDataException, NoSuchPredictorStrategyException, PredictionNotPreparedException {
