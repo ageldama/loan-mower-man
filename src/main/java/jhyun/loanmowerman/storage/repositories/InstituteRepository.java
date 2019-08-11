@@ -10,4 +10,7 @@ public interface InstituteRepository extends PagingAndSortingRepository<Institut
 
     @Query("SELECT i.name FROM Institute i")
     Collection<String> listAllInstituteNames();
+
+    @Query("SELECT i.code FROM Institute i WHERE i.name LIKE CONCAT('%', ?1 ,'%')")
+    Collection<String> findInstituteCodeByName(String instituteNamePart);
 }
