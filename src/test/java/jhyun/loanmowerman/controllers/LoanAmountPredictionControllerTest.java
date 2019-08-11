@@ -1,6 +1,5 @@
 package jhyun.loanmowerman.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jhyun.loanmowerman.controllers.aggregations.NoDataException;
 import jhyun.loanmowerman.controllers.predictions.LoanAmountPredictionOfMonthRequest;
