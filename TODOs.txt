@@ -72,9 +72,11 @@ DONE: 특정 은행의 특정 달에 대해서 2018 년도 해당 달에 금융�
 DONE: Swagger + pred-api
 
 
-// TODO: README 보강
+DONE: README 보강
   1. <개발 프레임워크, 문제해결 전략, 빌드 및 실행 방법> 정리
   1. 구현한 기능들과 구현한 형태와 특징 설명
+
+
 
 
 // TODO: predictor -- regression?
