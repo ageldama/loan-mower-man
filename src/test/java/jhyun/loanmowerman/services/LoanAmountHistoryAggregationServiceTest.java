@@ -1,6 +1,8 @@
 package jhyun.loanmowerman.services;
 
+import com.google.common.collect.ImmutableMap;
 import jhyun.loanmowerman.services.loan_amount_history_aggregations.MinMaxOfInstitute;
+import jhyun.loanmowerman.services.loan_amount_history_aggregations.TotalLoanAmountEntry;
 import jhyun.loanmowerman.services.loan_amount_history_aggregations.TotalLoanAmounts;
 import jhyun.loanmowerman.services.loan_amount_history_aggregations.YearAndAmountEntry;
 import jhyun.loanmowerman.storage.entities.Institute;
@@ -30,12 +32,22 @@ public class LoanAmountHistoryAggregationServiceTest {
     @Test
     public void testTotalLoanAmountsByYear() throws IOException {
         loanAmountHistoryService.purgeAll();
-        final InputStream inputStream = Examples.urlAsInputStream(Examples.exampleCsv());
+        final InputStream inputStream = Examples.urlAsInputStream(Examples.exampleCsvMini2());
         loanAmountHistoryService.saveCsv(inputStream);
         //
         final TotalLoanAmounts result = loanAmountHistoryAggregationService.totalLoanAmountsByYear();
         //
         assertThat(result.getName()).isEqualTo("주택금융 공급현황");
+        assertThat(result.getEntries()).hasSize(2)
+                .containsExactly(
+                        TotalLoanAmountEntry.builder()
+                                .year("2005 년").total(84L)
+                                .amounts(ImmutableMap.<String, Long>of("ABC", 60L, "DEF", 24L))
+                                .build(),
+                        TotalLoanAmountEntry.builder()
+                                .year("2017 년").total(13106L)
+                                .amounts(ImmutableMap.<String, Long>of("ABC", 1110L, "DEF", 11996L))
+                                .build());
     }
 
     @Test
