@@ -73,7 +73,6 @@ public class LoanAmountPredictionServiceCheckerTest {
         }
     }
 
-    // TODO: test-name?
     @Test
     public void predictAndDiff()
             throws NoDataException, PredictionNotPreparedException, NoSuchPredictorStrategyException {
