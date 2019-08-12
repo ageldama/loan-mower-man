@@ -31,7 +31,7 @@ public class AveragePredictorTest {
         given(loanAmountRepository.averageAmountOfMonthByInstitute(anyString(), any()))
                 .will(invocation -> {
                     if (invocation.getArgument(0).equals("BANKCODE")) {
-                        return Double.valueOf(Math.ceil(mockRecorders.loanAmounts(institute)
+                        return Double.valueOf(Math.round(mockRecorders.loanAmounts(institute)
                                 .mapToLong(LoanAmount::getAmount)
                                 .average()
                                 .getAsDouble())).longValue();
