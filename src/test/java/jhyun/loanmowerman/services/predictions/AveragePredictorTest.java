@@ -1,61 +1,67 @@
 package jhyun.loanmowerman.services.predictions;
 
 import jhyun.loanmowerman.controllers.aggregations.NoDataException;
-import jhyun.loanmowerman.services.LoanAmountHistoryService;
-import jhyun.loanmowerman.testing_supp.Examples;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
+import jhyun.loanmowerman.storage.entities.Institute;
+import jhyun.loanmowerman.storage.entities.LoanAmount;
+import jhyun.loanmowerman.storage.repositories.LoanAmountRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import java.io.IOException;
-import java.io.InputStream;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 
-@Ignore("LoanAmountPredictionServiceCheckerTest으로 통합")
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(MockitoJUnitRunner.class)
 public class AveragePredictorTest {
 
-    @Autowired
+    private PredictorMockRecorders mockRecorders = new PredictorMockRecorders();
+
+    @Mock
+    private LoanAmountRepository loanAmountRepository;
+
+    @InjectMocks
     private AveragePredictor averagePredictor;
 
-    @Autowired
-    private LoanAmountHistoryService loanAmountHistoryService;
-
-    @Before
-    public void prepare() throws IOException {
-        final InputStream inputStream = Examples.urlAsInputStream(Examples.exampleCsv());
-        loanAmountHistoryService.saveCsv(inputStream);
-    }
-
-    @After
-    public void teardown() {
-        loanAmountHistoryService.purgeAll();
+    private void recordMocks() {
+        final Institute institute = new Institute("BANKCODE", "BANKNAME");
+        given(loanAmountRepository.averageAmountOfMonthByInstitute(anyString(), any()))
+                .will(invocation -> {
+                    if (invocation.getArgument(0).equals("BANKCODE")) {
+                        return Double.valueOf(Math.ceil(mockRecorders.loanAmounts(institute)
+                                .mapToLong(LoanAmount::getAmount)
+                                .average()
+                                .getAsDouble())).longValue();
+                    } else {
+                        return null;
+                    }
+                });
     }
 
     @Test
     public void predict() throws NoDataException, PredictionNotPreparedException {
-        final LoanAmountPrediction result = averagePredictor.predict(2018, 2, "2");
+        recordMocks();
+        //
+        final LoanAmountPrediction result = averagePredictor.predict(1982, 10, "BANKCODE");
         assertThat(result).isNotNull();
-        assertThat(result.getBank()).isNotBlank().isEqualTo("2");
-        assertThat(result.getYear()).isEqualTo(2018);
-        assertThat(result.getMonth()).isEqualTo(2);
-        assertThat(result.getAmount()).isNotNull().isPositive();    // 4732
+        assertThat(result.getBank()).isNotBlank().isEqualTo("BANKCODE");
+        assertThat(result.getYear()).isEqualTo(1982);
+        assertThat(result.getMonth()).isEqualTo(10);
+        assertThat(result.getAmount()).isNotNull().isBetween(9L, 10L);
     }
 
     @Test
     public void predictWithNoData() throws NoDataException, PredictionNotPreparedException {
-        final LoanAmountPrediction result = averagePredictor.predict(2018, 24, "INVALID_BANK");
+        recordMocks();
+        //
+        final LoanAmountPrediction result = averagePredictor.predict(1982, 10, "INVALID_BANK");
         assertThat(result).isNotNull();
         assertThat(result.getBank()).isNotBlank();
-        assertThat(result.getYear()).isEqualTo(2018);
-        assertThat(result.getMonth()).isEqualTo(24);
+        assertThat(result.getYear()).isEqualTo(1982);
+        assertThat(result.getMonth()).isEqualTo(10);
         assertThat(result.getAmount()).isNull(); // unable to predict!
     }
 }
