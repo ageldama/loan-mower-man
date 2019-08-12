@@ -74,30 +74,11 @@ public class WekaLinearRegressionPredictor implements Predictor, PredictionPrepp
             //
             LinearRegression model = new LinearRegression();
             model.buildClassifier(dataset);
-            log.info("Weka-LR = {}", model);
+            log.trace("Weka-LR = {}", model);
             //
             final Instance instance = new DenseInstance(1.0, new double[]{year.doubleValue(), month.doubleValue(), 0.0});
-            /*
-            final Instance instance = new DenseInstance(1.0, new double[]{year.doubleValue(), month.doubleValue(), 0.0});
-
-                amount =
-
-                  3.65   * month +
-                 -8.4722
-
-                Predicted amount = 28.027777754965285
-             */
-            /*
-             * Instance instance = dataset.lastInstance();
-             *
-             * amount =
-             *
-             *       3.65   * month +
-             *      -8.4722
-             * Predicted amount = 24.37777775952778
-             */
             final double amountDouble = model.classifyInstance(instance);
-            log.info("Predicted amount = {}", amountDouble);
+            log.trace("Predicted amount = {}", amountDouble);
             amount = Double.valueOf(amountDouble).longValue();
         } catch (Exception e) {
             log.error("Prediction fail", e);

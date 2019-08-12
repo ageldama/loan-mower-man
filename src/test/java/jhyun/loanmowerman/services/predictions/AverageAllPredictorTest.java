@@ -5,6 +5,7 @@ import jhyun.loanmowerman.services.LoanAmountHistoryService;
 import jhyun.loanmowerman.testing_supp.Examples;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Ignore("LoanAmountPredictionServiceCheckerTest으로 통합")
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class AverageAllPredictorTest {
