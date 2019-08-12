@@ -57,6 +57,7 @@ public class LoanAmountPredictionServiceCheckerTest {
     @Before
     public void prepare() throws IOException, InterruptedException, ExecutionException, TimeoutException {
         if (!inited) {
+            loanAmountHistoryService.purgeAll();
             final InputStream inputStream = Examples.urlAsInputStream(Examples.exampleCsv());
             loanAmountHistoryService.saveCsv(inputStream);
             final Future<?> fut = loanAmountPredictionService.prepareForStrategies();
