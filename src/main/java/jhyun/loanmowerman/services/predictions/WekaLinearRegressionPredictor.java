@@ -57,8 +57,6 @@ public class WekaLinearRegressionPredictor implements Predictor, PredictionPrepp
     @Transactional
     @Override
     public void prepare() {
-        trainedPredictionModelRepository.deleteByStrategy(STRATEGY_NAME);
-        //
         final ArrayList<Institute> banks = Lists.newArrayList(instituteRepository.findAll());
         for (Institute bank : banks) {
             // prepare temp file (.arff)

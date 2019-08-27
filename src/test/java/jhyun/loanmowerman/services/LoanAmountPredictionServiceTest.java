@@ -2,6 +2,7 @@ package jhyun.loanmowerman.services;
 
 import jhyun.loanmowerman.controllers.aggregations.NoDataException;
 import jhyun.loanmowerman.services.predictions.*;
+import jhyun.loanmowerman.storage.repositories.TrainedPredictionModelRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -28,6 +29,9 @@ public class LoanAmountPredictionServiceTest {
 
     @Mock
     private WekaLinearRegressionPredictor wekaLinearRegressionPredictor;
+    
+    @Mock
+    private TrainedPredictionModelRepository trainedPredictionModelRepository;
 
     @InjectMocks
     private LoanAmountPredictionService loanAmountPredictionService;

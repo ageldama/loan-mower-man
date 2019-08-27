@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import jhyun.loanmowerman.controllers.aggregations.NoDataException;
 import jhyun.loanmowerman.services.predictions.*;
+import jhyun.loanmowerman.storage.repositories.TrainedPredictionModelRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,12 +28,16 @@ public class LoanAmountPredictionService {
 
     private ExecutorService predictionPrepperExecutor = Executors.newSingleThreadExecutor();
 
+    private TrainedPredictionModelRepository trainedPredictionModelRepository;
+
     @Autowired
     public LoanAmountPredictionService(
+            TrainedPredictionModelRepository trainedPredictionModelRepository,
             AveragePredictor averagePredictor,
             AverageAllPredictor AverageAllPredictor,
             WekaLinearRegressionPredictor wekaLinearRegressionPredictor
     ) {
+        this.trainedPredictionModelRepository = trainedPredictionModelRepository;
         this.averagePredictor = averagePredictor;
         this.averageAllPredictor = AverageAllPredictor;
         this.wekaLinearRegressionPredictor = wekaLinearRegressionPredictor;
@@ -46,6 +51,7 @@ public class LoanAmountPredictionService {
     }
 
     public Future<?> prepareForStrategies() {
+        trainedPredictionModelRepository.deleteAll();
         return predictionPrepperExecutor.submit(() -> {
             log.info("Prediction preparation initiated: {}", this.predictionPreppers);
             for (PredictionPrepper prepper : this.predictionPreppers) {
