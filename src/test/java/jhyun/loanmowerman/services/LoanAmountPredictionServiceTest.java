@@ -29,7 +29,7 @@ public class LoanAmountPredictionServiceTest {
 
     @Mock
     private WekaLinearRegressionPredictor wekaLinearRegressionPredictor;
-    
+
     @Mock
     private TrainedPredictionModelRepository trainedPredictionModelRepository;
 
