@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,6 +42,10 @@ public final class Examples {
 
     public static InputStream urlAsInputStream(final URL url) throws IOException {
         return url.openStream();
+    }
+
+    public static Reader urlAsReader(final URL url) throws IOException {
+        return new InputStreamReader(url.openStream(), Charsets.UTF_8);
     }
 
     @Test

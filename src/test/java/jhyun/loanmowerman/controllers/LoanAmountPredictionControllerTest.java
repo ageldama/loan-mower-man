@@ -20,7 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.*;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -50,8 +50,8 @@ public class LoanAmountPredictionControllerTest extends WebMvcTestBase {
     @Before
     public void prepare() throws IOException, InterruptedException, ExecutionException, TimeoutException {
         apiUserService.signUp(apiUserId, apiUserPw);
-        final InputStream inputStream = Examples.urlAsInputStream(Examples.exampleCsv());
-        loanAmountHistoryService.saveCsv(inputStream);
+        final Reader reader = Examples.urlAsReader(Examples.exampleCsv());
+        loanAmountHistoryService.saveCsv(reader);
         Future<?> fut = loanAmountPredictionService.prepareForStrategies();
         fut.get(5L, TimeUnit.SECONDS);
     }

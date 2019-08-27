@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.io.StringBufferInputStream;
+import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class IndexController {
             @ApiParam(value = "DB에 저장하려는 CSV 파일 내용")
             @RequestBody String requestBody
     ) throws URISyntaxException, IOException {
-        loanAmountHistoryService.saveCsv(new StringBufferInputStream(requestBody));
+        loanAmountHistoryService.saveCsv(new StringReader(requestBody));
         loanAmountPredictionService.prepareForStrategies();
         return ResponseEntity.created(new URI("/history")).body("Created");
     }

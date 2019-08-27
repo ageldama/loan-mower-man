@@ -11,6 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.net.URISyntaxException;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -38,7 +39,7 @@ public class IndexControllerWiringTest {
     @Test
     public void testSaveCsv() throws IOException, URISyntaxException {
         indexController.putCsv(Examples.urlAsString(Examples.exampleCsv3Lines()));
-        verify(loanAmountHistoryService, times(1)).saveCsv(any(InputStream.class));
+        verify(loanAmountHistoryService, times(1)).saveCsv(any(Reader.class));
         verify(loanAmountPredictionService, times(1)).prepareForStrategies();
     }
 }

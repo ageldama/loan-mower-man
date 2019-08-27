@@ -15,7 +15,7 @@ import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,8 +33,8 @@ public class LoanAmountHistoryAggregationControllerTest extends WebMvcTestBase {
     @Before
     public void prepare() throws IOException {
         apiUserService.signUp(apiUserId, apiUserPw);
-        final InputStream inputStream = Examples.urlAsInputStream(Examples.exampleCsv());
-        loanAmountHistoryService.saveCsv(inputStream);
+        final Reader reader = Examples.urlAsReader(Examples.exampleCsv());
+        loanAmountHistoryService.saveCsv(reader);
     }
 
     @After
@@ -77,7 +77,9 @@ public class LoanAmountHistoryAggregationControllerTest extends WebMvcTestBase {
                         HttpStatus.FAILED_DEPENDENCY));
     }
 
-    /** 연도별 각 금융기관의 지원금액 합계 */
+    /**
+     * 연도별 각 금융기관의 지원금액 합계
+     */
     @Test
     public void testTotalByYears() {
         final HttpHeaders headers = apiUserJwtHeaders();

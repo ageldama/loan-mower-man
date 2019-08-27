@@ -75,7 +75,7 @@ public class IndexControllerTest extends WebMvcTestBase {
     }
 
     private void saveCsv(final URL exampleCsv) throws IOException {
-        this.loanAmountHistoryService.saveCsv(Examples.urlAsInputStream(exampleCsv));
+        this.loanAmountHistoryService.saveCsv(Examples.urlAsReader(exampleCsv));
     }
 
     private void purgeAll() {

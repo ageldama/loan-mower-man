@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,8 +59,8 @@ public class LoanAmountPredictionServiceCheckerTest {
     public void prepare() throws IOException, InterruptedException, ExecutionException, TimeoutException {
         if (!inited) {
             loanAmountHistoryService.purgeAll();
-            final InputStream inputStream = Examples.urlAsInputStream(Examples.exampleCsv());
-            loanAmountHistoryService.saveCsv(inputStream);
+            final Reader reader = Examples.urlAsReader(Examples.exampleCsv());
+            loanAmountHistoryService.saveCsv(reader);
             final Future<?> fut = loanAmountPredictionService.prepareForStrategies();
             fut.get(5L, TimeUnit.SECONDS);
             inited = true;

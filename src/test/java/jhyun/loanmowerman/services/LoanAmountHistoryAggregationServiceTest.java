@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,8 +32,8 @@ public class LoanAmountHistoryAggregationServiceTest {
     @Test
     public void testTotalLoanAmountsByYear() throws IOException {
         loanAmountHistoryService.purgeAll();
-        final InputStream inputStream = Examples.urlAsInputStream(Examples.exampleCsvMini2());
-        loanAmountHistoryService.saveCsv(inputStream);
+        final Reader reader = Examples.urlAsReader(Examples.exampleCsvMini2());
+        loanAmountHistoryService.saveCsv(reader);
         //
         final TotalLoanAmounts result = loanAmountHistoryAggregationService.totalLoanAmountsByYear();
         //
@@ -53,8 +53,8 @@ public class LoanAmountHistoryAggregationServiceTest {
     @Test
     public void testMostLoanAllowedInstitute() throws IOException {
         loanAmountHistoryService.purgeAll();
-        final InputStream inputStream = Examples.urlAsInputStream(Examples.exampleCsv());
-        loanAmountHistoryService.saveCsv(inputStream);
+        final Reader reader = Examples.urlAsReader(Examples.exampleCsv());
+        loanAmountHistoryService.saveCsv(reader);
         //
         Optional<Institute> institute = loanAmountHistoryAggregationService.mostLoanAllowedInstitute(2005);
         assertThat(institute).isPresent();
@@ -65,8 +65,8 @@ public class LoanAmountHistoryAggregationServiceTest {
     @Test
     public void testFindMinMaxOfInstituteOnYear() throws IOException {
         loanAmountHistoryService.purgeAll();
-        final InputStream inputStream = Examples.urlAsInputStream(Examples.exampleCsv());
-        loanAmountHistoryService.saveCsv(inputStream);
+        final Reader reader = Examples.urlAsReader(Examples.exampleCsv());
+        loanAmountHistoryService.saveCsv(reader);
         //
         final MinMaxOfInstitute result = loanAmountHistoryAggregationService.findMinMaxOfInstitute("외환은행");
         assertThat(result.getInstituteName()).isEqualTo("외환은행");

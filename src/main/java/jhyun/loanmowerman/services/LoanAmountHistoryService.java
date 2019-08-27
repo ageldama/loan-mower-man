@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.*;
 
 @Slf4j
@@ -42,8 +43,8 @@ public class LoanAmountHistoryService {
     }
 
     @Transactional
-    public void saveCsv(final InputStream csvInputStream) throws IOException {
-        final Iterator<LoanAmountHistory> it = this.csvReader.iterator(csvInputStream);
+    public void saveCsv(final Reader csvReader) throws IOException {
+        final Iterator<LoanAmountHistory> it = this.csvReader.iterator(csvReader);
         while (it.hasNext()) {
             final LoanAmountHistory hist = it.next();
             // get-or-create(institute)

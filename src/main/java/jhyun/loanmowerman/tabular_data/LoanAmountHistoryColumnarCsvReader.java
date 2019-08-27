@@ -1,6 +1,5 @@
 package jhyun.loanmowerman.tabular_data;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import jhyun.loanmowerman.value_sanitizers.BankNameSanitizer;
 import jhyun.loanmowerman.value_sanitizers.IntegerSanitizer;
@@ -9,10 +8,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -46,8 +43,7 @@ public final class LoanAmountHistoryColumnarCsvReader {
         return result;
     }
 
-    public Iterator<LoanAmountHistory> iterator(final InputStream inputStream) throws IOException {
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, Charsets.UTF_8));
+    public Iterator<LoanAmountHistory> iterator(final Reader reader) throws IOException {
         final CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT);
 
         final Iterator<CSVRecord> it = parser.iterator();

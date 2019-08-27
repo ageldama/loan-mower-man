@@ -12,11 +12,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanAmountHistoryServiceTest {
@@ -39,8 +37,8 @@ public class LoanAmountHistoryServiceTest {
 
     @Test
     public void testSaveCsvMini() throws IOException {
-        final InputStream inputStream = Examples.urlAsInputStream(Examples.exampleCsvMini());
-        this.loanAmountHistoryService.saveCsv(inputStream);
+        final Reader reader = Examples.urlAsReader(Examples.exampleCsvMini());
+        this.loanAmountHistoryService.saveCsv(reader);
         //
         verify(this.instituteRepository, times(2)).findById(eq("3"));
         verify(this.instituteRepository, times(1)).save(eq(new Institute("3", "국민은행")));

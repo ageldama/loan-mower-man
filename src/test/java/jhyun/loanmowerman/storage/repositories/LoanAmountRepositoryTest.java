@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,8 +36,8 @@ public class LoanAmountRepositoryTest {
 
     @Before
     public void prepare() throws IOException {
-        final InputStream inputStream = Examples.urlAsInputStream(Examples.exampleCsv3Lines());
-        loanAmountHistoryService.saveCsv(inputStream);
+        final Reader reader = Examples.urlAsReader(Examples.exampleCsv3Lines());
+        loanAmountHistoryService.saveCsv(reader);
     }
 
     @After

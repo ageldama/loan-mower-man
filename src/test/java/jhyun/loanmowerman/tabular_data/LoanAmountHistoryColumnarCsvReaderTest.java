@@ -64,7 +64,7 @@ public class LoanAmountHistoryColumnarCsvReaderTest {
         final IntegerSanitizer integerSanitizer = new IntegerSanitizer();
         final LoanAmountHistoryColumnarCsvReader csvReader =
                 new LoanAmountHistoryColumnarCsvReader(bankNameSanitizer, integerSanitizer);
-        final Iterator<LoanAmountHistory> it = csvReader.iterator(Examples.urlAsInputStream(Examples.exampleCsv()));
+        final Iterator<LoanAmountHistory> it = csvReader.iterator(Examples.urlAsReader(Examples.exampleCsv()));
         while (it.hasNext()) {
             final LoanAmountHistory hist = it.next();
             log.trace("hist-entry = {}", hist);
@@ -78,7 +78,7 @@ public class LoanAmountHistoryColumnarCsvReaderTest {
         final LoanAmountHistoryColumnarCsvReader csvReader =
                 new LoanAmountHistoryColumnarCsvReader(bankNameSanitizer, integerSanitizer);
         final Iterator<LoanAmountHistory> it = csvReader.iterator(
-                Examples.urlAsInputStream(Examples.exampleCsv3Lines()));
+                Examples.urlAsReader(Examples.exampleCsv3Lines()));
         final List<LoanAmountHistory> result = new ArrayList<>();
         while (it.hasNext()) {
             final LoanAmountHistory hist = it.next();
